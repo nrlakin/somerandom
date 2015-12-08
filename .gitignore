@@ -1,0 +1,8 @@
+
+venv
+*.pyc
+*.db
+tmp
+*.pem
+config.py
+
