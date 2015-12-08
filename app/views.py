@@ -35,6 +35,10 @@ def index():
 def post_status(status):
     twitter.post('statuses/update.json', data={'status':status})
 
+# @celery.task
+# def follow_back():
+#     pass
+
 def verify_poster(poster):
     posts = poster.get_posts()
     if len(posts) > MAX_TWEETS_PER_USER:
