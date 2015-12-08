@@ -7,10 +7,10 @@ class Poster(db.Model):
     posts = db.relationship('Post', backref='author', lazy='dynamic')
 
     def get_posts(self):
-        return Post.query.filter(author==self.id).order_by(Post.timestamp.desc())
+        return self.posts.order_by(Post.timestamp.desc()).all()
 
     def __repr__(self):
-        print '<Poster %r>' % self.id
+        return '<Poster %r>' % self.id
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -20,4 +20,4 @@ class Post(db.Model):
     tweet_id = db.Column(db.Integer, nullable = True)
 
     def __repr__(self):
-        print '<Post %r>' % self.body
+        return '<Post %r>' % self.body

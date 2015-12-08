@@ -4,8 +4,8 @@ from app import app, db, twitter
 from datetime import date
 from .models import Post, Poster
 from .forms import PostForm
-from datetime import datetime
-from config import DATABASE_QUERY_TIMEOUT, USER_CREDENTIALS
+from datetime import datetime, timedelta
+from config import DATABASE_QUERY_TIMEOUT, USER_CREDENTIALS, MAX_TWEETS_PER_USER
 
 @app.route('/', methods = ['GET', 'POST'])
 @app.route('/index', methods = ['GET', 'POST'])
@@ -24,12 +24,25 @@ def index():
         db.session.add(poster)
         db.session.add(post)
         db.session.commit()
-        post_status(post.body)
+        if (verify_poster(poster)):
+            flash("post is live!")
+            post_status(post.body)
+        else:
+            flash("failed to verify poster.")
     return render_template('index.html',
                             form = form)
 
 def post_status(status):
     twitter.post('statuses/update.json', data={'status':status})
+
+def verify_poster(poster):
+    posts = poster.get_posts()
+    if len(posts) > MAX_TWEETS_PER_USER:
+        td = timedelta(days=1)
+        flash(posts[2].timestamp)
+        flash(datetime.utcnow() - td)
+        return posts[2].timestamp > (datetime.utcnow() - td)
+    return True
 
 @twitter.tokengetter
 def get_token():
