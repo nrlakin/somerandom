@@ -1,11 +1,18 @@
 .vertical-center {
     min-height: 100%;
-    min-height: 100vh;    
+    min-width: 100%;
+    min-height: 100vh;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+    flex-direction: row;
     display: -webkit-flex;*/ /* For Safari */
     -webkit-justify-content: center; /* For Safari */
     -webkit-align-items: center; /* For Safari */
+}
+
+.vertical-align > [class^="col-"],
+.vertical-align > [class*=" col-"] {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Optional, to align inner items
+                              horizontally inside the column */
 }
