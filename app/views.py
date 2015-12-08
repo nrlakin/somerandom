@@ -39,9 +39,9 @@ def verify_poster(poster):
     posts = poster.get_posts()
     if len(posts) > MAX_TWEETS_PER_USER:
         td = timedelta(days=1)
-        flash(posts[2].timestamp)
+        flash(posts[MAX_TWEETS_PER_USER-1].timestamp)
         flash(datetime.utcnow() - td)
-        return posts[2].timestamp > (datetime.utcnow() - td)
+        return posts[MAX_TWEETS_PER_USER-1].timestamp < (datetime.utcnow() - td)
     return True
 
 @twitter.tokengetter
