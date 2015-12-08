@@ -11,3 +11,4 @@ class Post(db.Model):
     body = db.Column(db.String(256))
     timestamp = db.Column(db.DateTime)
     poster_id = db.Column(db.Integer, db.ForeignKey('poster.id'))
+    tweet_id = db.Column(db.Integer, nullable = True)
