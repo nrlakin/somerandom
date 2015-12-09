@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, session, url_for, request, g, jsonify
 from flask.ext.sqlalchemy import get_debug_queries
-from app import app, db, twitter
+from app import app, db, twitter, celery
 from datetime import date
 from .models import Post, Poster
 from .forms import PostForm
@@ -27,6 +27,7 @@ def index():
         if (verify_poster(poster)):
             flash("post is live!")
             post_status(post.body)
+            follow_back()
         else:
             flash("failed to verify poster.")
     return render_template('index.html',
@@ -39,13 +40,15 @@ def post_status(status):
 def follow_back():
     followers = get_followers()
     followed = get_followed()
-    to_follow = set(followed) - set(followers)
+    to_follow = set(followers) - set(followed)
     for user in to_follow:
-        follow(user)
+        flash(follow(user).data)
+        flash(user)
     return len(to_follow)
 
 def follow(user_id):
-    resp = twitter.post('friendships/create', data={'user_id':user_id})
+    resp = twitter.post('friendships/create.json', data={'user_id':user_id,
+        'follow':True})
     return resp
 
 def get_followers():
