@@ -38,6 +38,14 @@ def post_status(status):
 # @celery.task
 # def follow_back():
 #     pass
+def get_followers():
+    return twitter.get('followers/ids.json', data={'screen_name':USER_CREDENTIALS['screen_name']})
+
+def get_followed():
+    return twitter.get('friends/ids.json', data={'screen_name':USER_CREDENTIALS['screen_name']})
+
+def compare_lists(a, b):
+    return set(a) ^ set(b)
 
 def verify_poster(poster):
     posts = poster.get_posts()
