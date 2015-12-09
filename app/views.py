@@ -36,13 +36,27 @@ def post_status(status):
     twitter.post('statuses/update.json', data={'status':status})
 
 # @celery.task
-# def follow_back():
-#     pass
+def follow_back():
+    followers = get_followers()
+    followed = get_followed()
+    to_follow = set(followed) - set(followers)
+    for user in to_follow:
+        follow(user)
+    return len(to_follow)
+
+def follow(user_id):
+    resp = twitter.post('friendships/create', data={'user_id':user_id})
+    return resp
+
 def get_followers():
-    return twitter.get('followers/ids.json', data={'screen_name':USER_CREDENTIALS['screen_name']})
+    resp = twitter.get('followers/ids.json',
+            data={'screen_name':USER_CREDENTIALS['twitter']['screen_name']})
+    return resp.data['ids']
 
 def get_followed():
-    return twitter.get('friends/ids.json', data={'screen_name':USER_CREDENTIALS['screen_name']})
+    resp = twitter.get('friends/ids.json',
+            data={'screen_name':USER_CREDENTIALS['twitter']['screen_name']})
+    return resp.data['ids']
 
 def compare_lists(a, b):
     return set(a) ^ set(b)
