@@ -35,7 +35,7 @@ def index():
 def post_status(status):
     twitter.post('statuses/update.json', data={'status':status})
 
-# @celery.task
+@celery.task(name='somerando.follow_back')
 def follow_back():
     followers = get_followers()
     followed = get_followed()

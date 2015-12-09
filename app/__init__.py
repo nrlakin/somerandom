@@ -3,7 +3,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 import os
 from flask_oauthlib.client import OAuth
 from flask.ext.mail import Mail
-# from celery_config import make_celery
+from celery_config import make_celery
 from config import basedir, ADMINS, MAIL_SERVER, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD
 
 app = Flask(__name__)
@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.config.from_object('config')
 db = SQLAlchemy(app)
 oauth = OAuth(app)
-# celery = make_celery(app)
+celery = make_celery(app)
 
 # Sort of cludgy, but initialize oauth remotes here
 github = oauth.remote_app(
@@ -26,14 +26,6 @@ github = oauth.remote_app(
     authorize_url='https://github.com/login/oauth/authorize'
 )
 
-# twitter = Twitter(
-#         auth=OAuth(
-#             app.config['USER_CREDENTIALS']['twitter']['access-token'],
-#             app.config['USER_CREDENTIALS']['twitter']['access-token-secret'],
-#             app.config['OAUTH_CREDENTIALS']['twitter']['id'],
-#             app.config['OAUTH_CREDENTIALS']['twitter']['secret']
-#         )
-#     )
 twitter = oauth.remote_app(
     'twitter',
     consumer_key=app.config['OAUTH_CREDENTIALS']['twitter']['id'],
