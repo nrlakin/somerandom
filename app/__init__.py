@@ -37,6 +37,7 @@ github = oauth.remote_app(
 #     authorize_url='https://api.twitter.com/oauth/authenticate',
 # )
 twitter = TwitterClient(
+    oauth,
     'twitter',
     consumer_key=app.config['OAUTH_CREDENTIALS']['twitter']['id'],
     consumer_secret=app.config['OAUTH_CREDENTIALS']['twitter']['secret'],
@@ -44,7 +45,7 @@ twitter = TwitterClient(
     request_token_url='https://api.twitter.com/oauth/request_token',
     access_token_url='https://api.twitter.com/oauth/access_token',
     authorize_url='https://api.twitter.com/oauth/authenticate',
-    credentials=auth.config['USER_CREDENTIALS']['twitter']
+    user_credentials=app.config['USER_CREDENTIALS']['twitter']
 )
 
 # Set up email logging

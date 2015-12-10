@@ -1,22 +1,15 @@
-# from app import twitter
-from config import USER_CREDENTIALS
-from flask_oauthlib.client import OAuth
+from flask_oauthlib.client import OAuthRemoteApp
 
-twitter = TwitterClient(...)
-
-@twitter.tokengetter
-def get_token():
-    return token
-
-class TwitterClient(OAuth.remote_app):
+class TwitterClient(OAuthRemoteApp):
     """
     Not very tidy; Flask-OAuthlib requires tokengetter decorator, which means
     Twitter remote app must be declared global.
     """
-    def __init__(self, name, consumer_key, consumer_secret, base_url,
+    def __init__(self, oauth, name, consumer_key, consumer_secret, base_url,
                 request_token_url, access_token_url, authorize_url,
-                user_credentials=None):
-        super(TwitterClient, self).__init__(name,
+                user_credentials):
+        super(TwitterClient, self).__init__(oauth,
+                                            name,
                                             consumer_key=consumer_key,
                                             consumer_secret=consumer_secret,
                                             base_url=base_url,
@@ -24,26 +17,26 @@ class TwitterClient(OAuth.remote_app):
                                             access_token_url=access_token_url,
                                             authorize_url=authorize_url)
         self.credentials=user_credentials
-        tokengetter(self.get_token)
+        self.screen_name = user_credentials['screen_name']
+        super(TwitterClient, self).tokengetter(self.get_token)
 
-    def follow(user_id):
+    def follow(self, user_id):
         resp = self.post('friendships/create.json', data={'user_id':user_id,
             'follow':True})
         return resp
 
-    def get_followers():
+    def get_followers(self):
         resp = self.get('followers/ids.json',
-                data={'screen_name':USER_CREDENTIALS['twitter']['screen_name']})
+                data={'screen_name':self.screen_name})
         return resp.data['ids']
 
-    def get_followed():
+    def get_followed(self):
         resp = self.get('friends/ids.json',
-                data={'screen_name':USER_CREDENTIALS['twitter']['screen_name']})
+                data={'screen_name':self.screen_name})
         return resp.data['ids']
 
-    def post_status(status):
+    def post_status(self, status):
         self.post('statuses/update.json', data={'status':status})
-
 
     def get_token(self):
         cred = self.credentials
