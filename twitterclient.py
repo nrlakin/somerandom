@@ -1,5 +1,6 @@
 from app import twitter
 from config import USER_CREDENTIALS
+from flask_oauthlib.client import OAuth
 
 class TwitterClient():
     """
@@ -26,7 +27,7 @@ class TwitterClient():
 
     def post_status(status):
         twitter.post('statuses/update.json', data={'status':status})
-        
+
     @twitter.tokengetter
     def get_token(self):
         cred = USER_CREDENTIALS['twitter']
