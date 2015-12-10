@@ -10,9 +10,6 @@ from config import DATABASE_QUERY_TIMEOUT, USER_CREDENTIALS, MAX_TWEETS_PER_USER
 @app.route('/', methods = ['GET', 'POST'])
 @app.route('/index', methods = ['GET', 'POST'])
 def index():
-    # posts=twitter.statuses.home_timeline()
-    # for post in posts:
-    #     flash(post)
     form = PostForm()
     if form.validate_on_submit():
         ip = request.remote_addr
@@ -27,7 +24,6 @@ def index():
         if (verify_poster(poster)):
             flash("post is live!")
             twitter.post_status(post.body)
-            #follow_back()
         else:
             flash("failed to verify poster.")
     return render_template('index.html',
@@ -54,7 +50,6 @@ def verify_poster(poster):
         flash(datetime.utcnow() - td)
         return posts[MAX_TWEETS_PER_USER-1].timestamp < (datetime.utcnow() - td)
     return True
-
 
 @app.before_request
 def before_request():
