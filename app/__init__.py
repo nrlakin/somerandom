@@ -4,6 +4,7 @@ import os
 from flask_oauthlib.client import OAuth
 from flask.ext.mail import Mail
 from celery_config import make_celery
+from twitterclient import TwitterClient
 from config import basedir, ADMINS, MAIL_SERVER, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD
 
 app = Flask(__name__)
@@ -26,7 +27,16 @@ github = oauth.remote_app(
     authorize_url='https://github.com/login/oauth/authorize'
 )
 
-twitter = oauth.remote_app(
+# twitter = oauth.remote_app(
+#     'twitter',
+#     consumer_key=app.config['OAUTH_CREDENTIALS']['twitter']['id'],
+#     consumer_secret=app.config['OAUTH_CREDENTIALS']['twitter']['secret'],
+#     base_url='https://api.twitter.com/1.1/',
+#     request_token_url='https://api.twitter.com/oauth/request_token',
+#     access_token_url='https://api.twitter.com/oauth/access_token',
+#     authorize_url='https://api.twitter.com/oauth/authenticate',
+# )
+twitter = TwitterClient(
     'twitter',
     consumer_key=app.config['OAUTH_CREDENTIALS']['twitter']['id'],
     consumer_secret=app.config['OAUTH_CREDENTIALS']['twitter']['secret'],
@@ -34,8 +44,8 @@ twitter = oauth.remote_app(
     request_token_url='https://api.twitter.com/oauth/request_token',
     access_token_url='https://api.twitter.com/oauth/access_token',
     authorize_url='https://api.twitter.com/oauth/authenticate',
+    credentials=auth.config['USER_CREDENTIALS']['twitter']
 )
-
 
 # Set up email logging
 if not app.debug:

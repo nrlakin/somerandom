@@ -26,8 +26,8 @@ def index():
         db.session.commit()
         if (verify_poster(poster)):
             flash("post is live!")
-            post_status(post.body)
-            follow_back()
+            twitter.post_status(post.body)
+            #follow_back()
         else:
             flash("failed to verify poster.")
     return render_template('index.html',
