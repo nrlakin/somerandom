@@ -2,6 +2,12 @@
 from config import USER_CREDENTIALS
 from flask_oauthlib.client import OAuth
 
+twitter = TwitterClient(...)
+
+@twitter.tokengetter
+def get_token():
+    return token
+
 class TwitterClient(OAuth.remote_app):
     """
     Not very tidy; Flask-OAuthlib requires tokengetter decorator, which means
@@ -37,6 +43,7 @@ class TwitterClient(OAuth.remote_app):
 
     def post_status(status):
         self.post('statuses/update.json', data={'status':status})
+
 
     def get_token(self):
         cred = self.credentials
