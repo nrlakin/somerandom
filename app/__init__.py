@@ -15,28 +15,6 @@ db = SQLAlchemy(app)
 oauth = OAuth(app)
 celery = make_celery(app)
 
-# Sort of cludgy, but initialize oauth remotes here
-github = oauth.remote_app(
-    'github',
-    consumer_key=app.config['OAUTH_CREDENTIALS']['github']['id'],
-    consumer_secret=app.config['OAUTH_CREDENTIALS']['github']['secret'],
-    request_token_params={'scope': 'user:email'},
-    base_url='https://api.github.com/',
-    request_token_url=None,
-    access_token_method='POST',
-    access_token_url='https://github.com/login/oauth/access_token',
-    authorize_url='https://github.com/login/oauth/authorize'
-)
-
-# twitter = oauth.remote_app(
-#     'twitter',
-#     consumer_key=app.config['OAUTH_CREDENTIALS']['twitter']['id'],
-#     consumer_secret=app.config['OAUTH_CREDENTIALS']['twitter']['secret'],
-#     base_url='https://api.twitter.com/1.1/',
-#     request_token_url='https://api.twitter.com/oauth/request_token',
-#     access_token_url='https://api.twitter.com/oauth/access_token',
-#     authorize_url='https://api.twitter.com/oauth/authenticate',
-# )
 twitter = TwitterClient(
     oauth,
     'twitter',
