@@ -33,9 +33,6 @@ def index():
     return render_template('index.html',
                             form = form)
 
-def post_status(status):
-    twitter.post('statuses/update.json', data={'status':status})
-
 @celery.task(name='somerando.follow_back')
 def follow_back():
     followers = get_followers()
@@ -73,10 +70,6 @@ def verify_poster(poster):
         return posts[MAX_TWEETS_PER_USER-1].timestamp < (datetime.utcnow() - td)
     return True
 
-@twitter.tokengetter
-def get_token():
-    cred = USER_CREDENTIALS['twitter']
-    return (cred['access-token'], cred['access-token-secret'])
 
 @app.before_request
 def before_request():
