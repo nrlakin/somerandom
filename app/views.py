@@ -33,30 +33,15 @@ def index():
     return render_template('index.html',
                             form = form)
 
-@celery.task(name='somerando.follow_back')
+@celery.task(name='somerandom.follow_back')
 def follow_back():
-    followers = get_followers()
-    followed = get_followed()
+    followers = twitter.get_followers()
+    followed = twitter.get_followed()
     to_follow = set(followers) - set(followed)
     for user in to_follow:
-        flash(follow(user).data)
+        flash(twitter.follow(user).data)
         flash(user)
     return len(to_follow)
-
-def follow(user_id):
-    resp = twitter.post('friendships/create.json', data={'user_id':user_id,
-        'follow':True})
-    return resp
-
-def get_followers():
-    resp = twitter.get('followers/ids.json',
-            data={'screen_name':USER_CREDENTIALS['twitter']['screen_name']})
-    return resp.data['ids']
-
-def get_followed():
-    resp = twitter.get('friends/ids.json',
-            data={'screen_name':USER_CREDENTIALS['twitter']['screen_name']})
-    return resp.data['ids']
 
 def compare_lists(a, b):
     return set(a) ^ set(b)

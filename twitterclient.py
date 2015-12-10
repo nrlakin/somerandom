@@ -1,10 +1,6 @@
 from flask_oauthlib.client import OAuthRemoteApp
 
 class TwitterClient(OAuthRemoteApp):
-    """
-    Not very tidy; Flask-OAuthlib requires tokengetter decorator, which means
-    Twitter remote app must be declared global.
-    """
     def __init__(self, oauth, name, consumer_key, consumer_secret, base_url,
                 request_token_url, access_token_url, authorize_url,
                 user_credentials):
