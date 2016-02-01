@@ -1,8 +1,6 @@
-
-venv
 *.pyc
-*.db
-tmp
 *.pem
-config.py
-
+*.db
+*.rdb
+venv/
+tmp/
