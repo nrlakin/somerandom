@@ -37,7 +37,7 @@ def follow_back():
     followed = twitter.get_followed()
     to_follow = set(followers) - set(followed)
     app.logger.info("Following %d followers..." % (len(to_follow)))
-    for follower in to_follow
+    for follower in to_follow:
         app.logger.info("Following %s." % (str(follower)))
         twitter.follow(follower)
     return len(to_follow)
