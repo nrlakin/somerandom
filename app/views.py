@@ -21,8 +21,11 @@ def index():
         db.session.add(post)
         db.session.commit()
         if (verify_poster(poster)):
-            flash("Post is live @twitter.com/_some_random_")
-            twitter.post_status(post.body)
+            resp=twitter.post_status(post.body)
+            if resp.data.get('errors'):
+                flash("You overheated the Twitter API--let it cool down and try again!")
+            else:
+                flash("Post is live @twitter.com/_some_random_")
         else:
             flash("You've posted too many times today.")
     return render_template('index.html',
