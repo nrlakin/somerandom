@@ -36,6 +36,7 @@ def follow_back():
     followers = twitter.get_followers()
     followed = twitter.get_followed()
     to_follow = set(followers) - set(followed)
+    celery.logger.info("Following %d followers..." % (len(to_follow)))
     return len(to_follow)
 
 def compare_lists(a, b):
