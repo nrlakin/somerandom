@@ -33,7 +33,7 @@ MAIL_USE_SSL = True
 MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
 MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 
-ADMINS = ['neil.lakin.dev@gmail.com']
+ADMINS = [os.environ.get('MAIL_ADMIN')]
 
 # Celery settings
 if os.environ.get('REDIS_URL') is None:
