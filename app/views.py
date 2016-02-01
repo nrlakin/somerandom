@@ -17,7 +17,6 @@ def index():
         if poster is None:
             poster = Poster(ip_address=ip)
         post = Post(body=form.post.data, timestamp=datetime.utcnow(), author=poster)
-        flash(post.body)
         db.session.add(poster)
         db.session.add(post)
         db.session.commit()
@@ -34,9 +33,6 @@ def follow_back():
     followers = twitter.get_followers()
     followed = twitter.get_followed()
     to_follow = set(followers) - set(followed)
-    for user in to_follow:
-        flash(twitter.follow(user).data)
-        flash(user)
     return len(to_follow)
 
 def compare_lists(a, b):
