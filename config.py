@@ -36,8 +36,13 @@ MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 ADMINS = ['neil.lakin.dev@gmail.com']
 
 # Celery settings
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+if os.environ.get('REDIS_URL') is None:
+    CELERY_BROKER_URL = 'redis://localhost:6379/0'
+    CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+else:
+    CELERY_BROKER_URL = os.environ.get('REDIS_URL')
+    CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL')
+
 CELERYBEAT_SCHEDULE = {
     'update_followers': {
         'task': 'somerandom.follow_back',
@@ -46,6 +51,13 @@ CELERYBEAT_SCHEDULE = {
     }
 }
 
+OAUTH_CREDENTIALS = {
+    'twitter': {
+        'id': os.environ.get('TWITTER_CONSUMER_KEY'),
+        'secret' : os.environ.get('TWITTER_CONSUMER_SECRET')
+    }
+
+}
 USER_CREDENTIALS = {
     'twitter': {
         'screen_name': os.environ.get('TWITTER_HANDLE'),
