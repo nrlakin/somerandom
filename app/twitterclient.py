@@ -42,7 +42,7 @@ class TwitterClient(OAuthRemoteApp):
             errors = resp.data.get('errors')
             for error in errors:
                 self.logger.info("Error getting followed: " + str(error['message']))
-        return resp.data['ids']
+        return resp.data.get('ids')
 
     def post_status(self, status):
         resp = self.post('statuses/update.json', data={'status':status})
