@@ -23,7 +23,7 @@ def index():
         if (verify_poster(poster)):
             resp=twitter.post_status(post.body.replace("@", "(at)"))
             if resp.data.get('errors'):
-                flash("You overheated the Twitter API--let it cool down and try again!")
+                flash("You broke the Twitter API: " + resp.data.get('errors')[0]['message'])
             else:
                 flash("Post is live @twitter.com/_some_random_")
         else:
