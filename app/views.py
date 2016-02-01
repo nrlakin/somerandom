@@ -22,10 +22,10 @@ def index():
         db.session.add(post)
         db.session.commit()
         if (verify_poster(poster)):
-            flash("post is live!")
+            flash("Post is live @twitter.com/_some_random_")
             twitter.post_status(post.body)
         else:
-            flash("failed to verify poster.")
+            flash("You've posted too many times today.")
     return render_template('index.html',
                             form = form)
 
@@ -46,8 +46,6 @@ def verify_poster(poster):
     posts = poster.get_posts()
     if len(posts) > MAX_TWEETS_PER_USER:
         td = timedelta(days=1)
-        flash(posts[MAX_TWEETS_PER_USER-1].timestamp)
-        flash(datetime.utcnow() - td)
         return posts[MAX_TWEETS_PER_USER-1].timestamp < (datetime.utcnow() - td)
     return True
 
