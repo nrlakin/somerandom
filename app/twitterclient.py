@@ -21,27 +21,35 @@ class TwitterClient(OAuthRemoteApp):
         resp = self.post('friendships/create.json', data={'user_id':user_id,
             'follow':True})
         if resp.data.get('errors') is not None:
-            self.logger.info("Error following: " + str(resp.data['errors']['message']))
+            errors = resp.data.get('errors')
+            for error in errors:
+                self.logger.info("Error following: " + str(error['message']))
         return resp
 
     def get_followers(self):
         resp = self.get('followers/ids.json',
                 data={'screen_name':self.screen_name})
         if resp.data.get('errors') is not None:
-            self.logger.info("Error getting followers: " + str(resp.data['errors']['message']))
+            errors = resp.data.get('errors')
+            for error in errors:
+                self.logger.info("Error getting followers: " + str(error['message']))
         return resp.data.get('ids')
 
     def get_followed(self):
         resp = self.get('friends/ids.json',
                 data={'screen_name':self.screen_name})
         if resp.data.get('errors') is not None:
-            self.logger.info("Error getting followed: " + str(resp.data['errors']['message']))
+            errors = resp.data.get('errors')
+            for error in errors:
+                self.logger.info("Error getting followed: " + str(error['message']))
         return resp.data['ids']
 
     def post_status(self, status):
         resp = self.post('statuses/update.json', data={'status':status})
         if resp.data.get('errors') is not None:
-            self.logger.info("Error posting status: " + str(resp.data['errors']['message']))
+            errors = resp.data.get('errors')
+            for error in errors:
+                self.logger.info("Error posting status: " + str(error['message']))
         return resp
 
     def get_token(self):
