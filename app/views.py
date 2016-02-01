@@ -21,7 +21,7 @@ def index():
         db.session.add(post)
         db.session.commit()
         if (verify_poster(poster)):
-            resp=twitter.post_status(post.body.replace("@", ""))
+            resp=twitter.post_status(post.body.replace("@", "(at)"))
             if resp.data.get('errors'):
                 flash("You overheated the Twitter API--let it cool down and try again!")
             else:
