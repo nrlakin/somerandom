@@ -46,7 +46,7 @@ else:
 CELERYBEAT_SCHEDULE = {
     'update_followers': {
         'task': 'somerandom.follow_back',
-        'schedule' : timedelta(seconds=30),
+        'schedule' : timedelta(seconds=61), # avoid rate limits.
         'args' : ()
     }
 }
