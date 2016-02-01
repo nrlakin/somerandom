@@ -15,18 +15,6 @@ db = SQLAlchemy(app)
 oauth = OAuth(app)
 celery = make_celery(app)
 
-twitter = TwitterClient(
-    oauth,
-    'twitter',
-    consumer_key=app.config['OAUTH_CREDENTIALS']['twitter']['id'],
-    consumer_secret=app.config['OAUTH_CREDENTIALS']['twitter']['secret'],
-    base_url='https://api.twitter.com/1.1/',
-    request_token_url='https://api.twitter.com/oauth/request_token',
-    access_token_url='https://api.twitter.com/oauth/access_token',
-    authorize_url='https://api.twitter.com/oauth/authenticate',
-    user_credentials=app.config['USER_CREDENTIALS']['twitter']
-)
-
 # Set up email logging
 if not app.debug:
     import logging
@@ -57,6 +45,18 @@ if os.environ.get('HEROKU') is not None:
     app.logger.setLevel(logging.INFO)
     app.logger.info('SomeRandom startup')
 
+twitter = TwitterClient(
+    oauth,
+    'twitter',
+    consumer_key=app.config['OAUTH_CREDENTIALS']['twitter']['id'],
+    consumer_secret=app.config['OAUTH_CREDENTIALS']['twitter']['secret'],
+    base_url='https://api.twitter.com/1.1/',
+    request_token_url='https://api.twitter.com/oauth/request_token',
+    access_token_url='https://api.twitter.com/oauth/access_token',
+    authorize_url='https://api.twitter.com/oauth/authenticate',
+    user_credentials=app.config['USER_CREDENTIALS']['twitter'],
+    logger=app.logger
+)
 
 
 from app import views, models
