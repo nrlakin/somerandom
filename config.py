@@ -20,7 +20,10 @@ SQLALCHEMY_RECORD_QUERIES = True
 DATABASE_QUERY_TIMEOUT = 0.5
 
 WTF_CSRF_ENABLED = True
-SECRET_KEY = "g987Ab#nv0+"
+if os.environ.get('CSRF_SECRET') is None:
+    SECRET_KEY = "tough secret"
+else:
+    CSRF_SECRET = os.environ.get('CSRF_SECRET')
 
 # Mail server settings
 MAIL_SERVER = 'smtp.googlemail.com'
@@ -43,23 +46,11 @@ CELERYBEAT_SCHEDULE = {
     }
 }
 
-# User Authentication providers
-OAUTH_CREDENTIALS = {
-    'github': {
-        'id': 'ee5cdac30349fd80b19e',
-        'secret' : '3c56b63e337e6f2bdb6b7bc6f74a6a673e2bb486'
-    },
-    'twitter': {
-        'id': '7X5RIOTm34msy3O1hE2xsrQk3',
-        'secret' : 'o5W2QOKYka2axghf1xiG6ig8K7EHVNI09mPFVPfgXjpp8FptpV'
-    }
-}
-
 USER_CREDENTIALS = {
     'twitter': {
-        'screen_name': 'btlakeDev',
-        'access-token': '4408539945-IUwQ9JxYoG7myBO5Lz0ObeaI1mgllMq8QmoI9aS',
-        'access-token-secret': 'YWVohiyvCOd2SnhM85rYNT6jIM2vrd79vNlUd2k5cFbtZ'
+        'screen_name': os.environ.get('TWITTER_HANDLE'),
+        'access-token': os.environ.get('TWITTER_ACCESS_TOKEN'),
+        'access-token-secret': os.environ.get('TWITTER_TOKEN_SECRET')
     }
 }
 
