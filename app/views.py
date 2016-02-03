@@ -29,7 +29,8 @@ def index():
         else:
             flash("You've posted too many times today.")
     return render_template('index.html',
-                            form = form)
+                            form = form,
+                            title = "Some Random on Twitter")
 
 @celery.task(name='somerandom.follow_back')
 def follow_back():
