@@ -44,11 +44,12 @@ else:
     CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL')
 
 CELERYBEAT_SCHEDULE = {
-    'update_followers': {
-        'task': 'somerandom.follow_back',
-        'schedule' : timedelta(seconds=61), # avoid rate limits.
-        'args' : ()
-    }
+    # Autofollowing violates Twitter's TOS.
+    # 'update_followers': {
+    #     'task': 'somerandom.follow_back',
+    #     'schedule' : timedelta(seconds=61), # avoid rate limits.
+    #     'args' : ()
+    # }
 }
 
 OAUTH_CREDENTIALS = {
