@@ -51,13 +51,20 @@ class OAuthSignIn(object):
         pass
 
     def get_user_info(self):
+        """(Optional) Get service-specific user info; implemented in subclass.
+        Return will be provider-specific.
+        """
         pass
 
     def store_token(self, resp):
+        """Store token from authorized response; implemented in subclass. Can be
+        stored in session or a database.
+        """
         pass
 
     @classmethod
     def get_provider(self, provider_name):
+        """Return an instantiated OAuthSignIn object for the given provider."""
         if self.providers is None:
             self.providers = {}
             for provider_class in self.__subclasses__():
