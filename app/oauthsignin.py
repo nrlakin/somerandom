@@ -4,24 +4,50 @@ from app import app, oauth, github, twitter
 
 
 class OAuthSignIn(object):
+    """ Class to represent a generic OAuth 1.0 or 2.0 session. Ultimately
+    deprecated in favor of TwitterClient for this app, but useful for using
+    OAuth for user credentials.
+
+    Attributes
+        providers (List[OAuthSignIn]): List of implemented provider subclasses.
+    """
+
     providers = None
 
     def __init__(self, provider_name):
+        """ Initialize session from provider_name in app config credentials.
+
+        Args:
+            provider_name (str): Name of provider/key in credentials dict. Must
+                have 'id' (consumer ID) and 'secret' (consumer secret) as keys.
+        """
         self.provider_name = provider_name
         credentials = current_app.config['OAUTH_CREDENTIALS'][provider_name]
         self.consumer_id = credentials['id']
         self.consumer_secret = credentials['secret']
 
     def authorize(self):
+        """Send authorization request to URL for oauth callback; implemented in
+        subclass.
+        """
         pass
 
     def authorized_response(self):
+        """Get authorization response with token; implemented in subclass.
+        Really a wrapper around Flask-OAuthlib.
+        """
         pass
 
     def get_oauth_token(self):
+        """Return stored OAuth token; implemented in subclass. Token should be
+        stored in session or DB in store_token method.
+        """
         pass
 
     def get_username(self):
+        """Get authorization response; implemented in subclass. Token should be
+        stored in session or DB in store_token method.
+        """
         pass
 
     def get_user_info(self):
