@@ -32,21 +32,13 @@ def index():
                             form = form,
                             title = "Some Random on Twitter")
 
-@celery.task(name='somerandom.follow_back')
-def follow_back():
-    followers = twitter.get_followers()
-    followed = twitter.get_followed()
-    to_follow = set(followers) - set(followed)
-    app.logger.info("Following %d followers..." % (len(to_follow)))
-    for follower in to_follow:
-        app.logger.info("Following %s." % (str(follower)))
-        twitter.follow(follower)
-    return len(to_follow)
-
-def compare_lists(a, b):
-    return set(a) ^ set(b)
-
 def verify_poster(poster):
+    """Verify that a poster has not overshot their rate limit. Should ultimately
+    be moved to a form validator.
+
+    Returns:
+        True if poster is eligible to post, False otherwise.
+    """
     posts = poster.get_posts()
     if len(posts) > MAX_TWEETS_PER_USER:
         td = timedelta(days=1)
@@ -59,17 +51,51 @@ def before_request():
 
 @app.errorhandler(404)
 def not_found_error(error):
+    """Server 404 error handler.
+
+    Returns:
+        Rendered HTML template.
+    """
     return render_template('404.html', title='Error-404'), 404
 
 @app.errorhandler(500)
 def internal_error(error):
+    """Server 500 error handler.
+
+    Returns:
+        Rendered HTML template.
+    """
     db.session.rollback()
     return render_template('500.html', title='Error-500')
 
 @app.after_request
 def after_request(response):
+    """This function logs queries that take longer than DATABASE_QUERY_TIMEOUT
+    for profiling. Called after every request.
+
+    Returns:
+        HTTP request response.
+    """
     for query in get_debug_queries():
         if query.duration >= DATABASE_QUERY_TIMEOUT:
             app.logger.warning("SLOW QUERY: %s\nParameters: %s\nDuration: %fs\n Context: %s\n" %
                 (query.statement, query.parameters, query.duration, query.context))
     return response
+
+@celery.task(name='somerandom.follow_back')
+def follow_back():
+    """Function to follow back anyone who follows this account. Called by
+    Celery task scheduler. Should eventually move this to separate celery task
+    file, it's a little messy having it in views.py.
+
+    Returns:
+        Integer, number of accounts followed.
+    """
+    followers = twitter.get_followers()
+    followed = twitter.get_followed()
+    to_follow = set(followers) - set(followed)
+    app.logger.info("Following %d followers..." % (len(to_follow)))
+    for follower in to_follow:
+        app.logger.info("Following %s." % (str(follower)))
+        twitter.follow(follower)
+    return len(to_follow)
